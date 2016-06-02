@@ -1,0 +1,37 @@
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:id="@+id/dialog_testo_conferma"
+            android:text="Sei sicuro di voler vendere questo oggetto? In caso affermativo  seleziona il prezzo di vendita e premi &quot;Vendi&quot;." />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/dialog_prezzo"
+            android:hint="prezzo"
+            android:layout_gravity="center_horizontal" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Vendi"
+            android:id="@+id/dialog_conferma_button"
+            android:layout_gravity="center_horizontal" />
+
+
+
+    </LinearLayout>
+
+</RelativeLayout>

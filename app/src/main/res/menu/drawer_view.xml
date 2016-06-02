@@ -1,0 +1,21 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/bar_code_search"
+            android:icon="@drawable/ic_one"
+            android:title="Bar-Code Search" />
+        <item
+            android:id="@+id/magazzino_search"
+            android:icon="@drawable/ic_one"
+            android:title="Magazzino" />
+        <item
+            android:id="@+id/aggiungi_nuovo"
+            android:icon="@drawable/ic_one"
+            android:title="Aggiungi Oggetto" />
+        <item
+            android:id="@+id/settings"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="Settings" />
+    </group>
+</menu>

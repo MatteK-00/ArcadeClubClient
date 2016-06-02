@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="spinner1_field">
+        <item>All</item>
+        <item>Sealed</item>
+        <item>Completo</item>
+        <item>loose</item>
+        <item>nol</item>
+    </string-array>
+</resources>

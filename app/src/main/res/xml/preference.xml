@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <CheckBoxPreference
+        android:key="mantieniLogin"
+        android:defaultValue="true"
+        android:title="cosa a caso"
+        />
+
+    <CheckBoxPreference
+        android:key="salvaDB"
+        android:defaultValue="true"
+        android:title="cosa a caso"
+        />
+
+    <CheckBoxPreference
+        android:key="utilizzaImmagini"
+        android:defaultValue="true"
+        android:title="cosa a caso"
+        />
+</PreferenceScreen>

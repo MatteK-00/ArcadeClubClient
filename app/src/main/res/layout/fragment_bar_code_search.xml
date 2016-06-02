@@ -1,0 +1,131 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".BarCodeSearchFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_alignParentStart="true"
+        android:weightSum="1"
+        android:layout_alignParentBottom="true">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="1">
+
+            <EditText
+                android:layout_width="166dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/bar_code_editText"
+                android:layout_gravity="center_horizontal|top"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_weight="0.80" />
+
+            <Button
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="prova"
+                android:id="@+id/buttonBARCODE"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="200dp">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/item_nome"
+                    android:textSize="20sp"
+                    android:layout_gravity="center_vertical" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/item_upc"
+                    android:textSize="20sp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/item_console"
+                    android:textSize="20sp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/item_anno"
+                    android:textSize="20sp"
+                    android:singleLine="false" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:id="@+id/item_hidden_image"
+                    android:visibility="invisible"
+                    android:textSize="0dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:id="@+id/item_hidden_id"
+                    android:visibility="invisible"
+                    android:textSize="0dp" />
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Aggiungi Nuovo"
+                    android:id="@+id/aggiungi_nuovo_button"
+                    android:visibility="invisible"
+                    android:enabled="false"
+                    android:clickable="false" />
+            </LinearLayout>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:id="@+id/imageView"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginRight="10dp" />
+        </LinearLayout>
+
+        <ListView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@android:id/list"
+            android:layout_gravity="center_horizontal|bottom"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true" />
+
+
+</LinearLayout>
+
+
+
+
+</RelativeLayout>
+
