@@ -393,7 +393,7 @@ public class MagazzinoSearchFragment extends ListFragment implements AdapterView
                                     JSONObject request = new JSONObject();
                                     request.put("table", "immagine");
                                     request.put("query", obj.upc);
-                                    obj.setImage(GetContent.GetImage(context,request,obj.upc));
+                                    obj.setImage(GetContent.getImage(context,request,obj.upc));
                                 }
 
                                 ListViewContent.add(obj);
@@ -430,7 +430,7 @@ public class MagazzinoSearchFragment extends ListFragment implements AdapterView
                                     JSONObject request = new JSONObject();
                                     request.put("table", "immagine");
                                     request.put("query", obj.upc);
-                                    obj.setImage(GetContent.GetImage(context,request,obj.upc));
+                                    obj.setImage(GetContent.getImage(context,request,obj.upc));
                                 }
 
                                 ListViewContent.add(obj);

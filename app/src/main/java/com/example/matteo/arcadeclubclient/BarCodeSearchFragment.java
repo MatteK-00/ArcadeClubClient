@@ -175,7 +175,7 @@ public class BarCodeSearchFragment  extends ListFragment implements AdapterView.
     }
 
     public void itemDialogPopup(JSONObject item) {
-        final Dialog dialog= new Dialog(getContext());
+        final Dialog dialog = new Dialog(getContext());
         dialog.setContentView(R.layout.dialog_magazzino);
 
         ImageView img_dialog = (ImageView) dialog.findViewById(R.id.dialog_img);
@@ -196,7 +196,15 @@ public class BarCodeSearchFragment  extends ListFragment implements AdapterView.
         dialog_console.setText(console.getText());
 
         if (Boolean.valueOf(GetProperties.getIstance(getContext()).getProp("image"))){
-            img_dialog.setImageBitmap(null);
+            try {
+                JSONObject REQUEST = new JSONObject();
+                REQUEST.put("method", "GET");
+                REQUEST.put("table", "search_upc");
+                REQUEST.put("query", "upc="+ upc.getText());
+                img_dialog.setImageBitmap(GetContent.getImage(getContext(),REQUEST, (String) upc.getText()));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
 
         try {
@@ -266,7 +274,7 @@ public class BarCodeSearchFragment  extends ListFragment implements AdapterView.
             }
         });
 
-        img_dialog.setImageBitmap(immagine.getDrawingCache());
+
         dialog.setTitle(nome.getText());
         String noteString = null;
         try {
@@ -276,8 +284,7 @@ public class BarCodeSearchFragment  extends ListFragment implements AdapterView.
         }
         if (!noteString.equals("null"))
             note.setText(noteString);
-
-
+        
         dialog.show();
     }
 
@@ -403,11 +410,12 @@ public class BarCodeSearchFragment  extends ListFragment implements AdapterView.
                     info_String.add(5, String.valueOf(info.get("immagine")));
 
                     if (Boolean.valueOf(GetProperties.getIstance(getContext()).getProp("image"))) {
+                        Log.i("BarCodeSearch","Sto caricaondo l'immagine nel dialog");
                         JSONObject request = new JSONObject();
                         request.put("table", "immagine");
                         request.put("query", String.valueOf(info.get("id_gioco")) + "_"
                                 + String.valueOf(info.get("immagine")));
-                        image = GetContent.GetImage(getContext(),request,info_String.get(1));
+                        image = GetContent.getImage(getContext(),request,info_String.get(1));
                     }
 
 

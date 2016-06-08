@@ -88,7 +88,7 @@ public class GetContent {
         db.addImage(upc,image);
     }
 
-    public static Bitmap GetImage(Context context, JSONObject request, String upc){
+    public static Bitmap getImage(Context context, JSONObject request, String upc){
         DataBaseManager db = new DataBaseManager(context);
         String result = db.getImage(upc);
         if (result.equals("")){
