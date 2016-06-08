@@ -77,7 +77,8 @@ public class RestClient {
     public static String executeGetRequest(JSONObject query) {
         try {
             GetProperties prop = GetProperties.getIstance(context);
-            URL url_request = new URL(url + prop.getProp("idDevice") + "/" +query.get("table").toString() +"/"+query.get("query").toString());
+            URL url_request = new URL(url + prop.getProp("idDevice") + "/" +query.get("table").toString() +
+                    "/"+query.get("table").toString()+"?"+query.get("query").toString());
             Log.i("RestClient_Service", url_request.toString());
             HttpURLConnection conn = (HttpURLConnection) url_request.openConnection();
             conn.setRequestMethod("GET");

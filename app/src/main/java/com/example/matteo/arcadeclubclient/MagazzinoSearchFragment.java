@@ -1,7 +1,6 @@
 package com.example.matteo.arcadeclubclient;
 
 
-import android.app.ActionBar;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -22,31 +21,20 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.example.matteo.arcadeclubclient.Utility.DialogConfermaPopup;
+import com.example.matteo.arcadeclubclient.Utility.DialogConfermaVendi;
 import com.example.matteo.arcadeclubclient.Utility.GetContent;
 import com.example.matteo.arcadeclubclient.Utility.GetProperties;
-import com.example.matteo.arcadeclubclient.Utility.ImageDownloader;
 import com.example.matteo.arcadeclubclient.Utility.RestClient;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.lang.reflect.Field;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 /**
  * Created by matteo on 06/05/16.
@@ -55,6 +43,7 @@ public class MagazzinoSearchFragment extends ListFragment implements AdapterView
 
     View view;
     ArrayList<magazzinoObj> ListViewContent = new ArrayList<>();
+
 
     @Override
     public Context getContext() {
@@ -137,7 +126,10 @@ public class MagazzinoSearchFragment extends ListFragment implements AdapterView
                 };
 
                 ListViewContent.clear(); //svuoto l'array cache di Bitmap
+                //DialogWait wait =
+                //new DialogWait(getContext()).start();
                 new CallServer().execute(request);
+
             }
         });
 
@@ -193,15 +185,12 @@ public class MagazzinoSearchFragment extends ListFragment implements AdapterView
                 TextView data_venduto = (TextView) rowView.findViewById(R.id.magazzino_label_data_venduto);
                 prezzo_venduto.setText(values.get(position).prezzo_vendita);
                 data_venduto.setText(values.get(position).data_vendita);
-                prezzo_venduto.setVisibility(rowView.VISIBLE);
-                data_venduto.setVisibility(rowView.VISIBLE);
-                //prezzo_venduto.height = LayoutParams.WRAP_CONTENT;
 
-                rowView.setBackgroundColor(Color.BLUE);
+                rowView.setBackgroundColor(Color.parseColor("#9900CC"));
 
             } else {
                 Log.i("Magazzino_Fragment", "Sto riempendo la listView con il magazzino");
-                rowView.setBackgroundColor(Color.GREEN);
+                //rowView.setBackgroundColor(Color.GREEN);
             }
 
             id_item.setText(values.get(position).id_item);
@@ -216,7 +205,7 @@ public class MagazzinoSearchFragment extends ListFragment implements AdapterView
             note.setText(values.get(position).note);
 
             if (Boolean.valueOf(GetProperties.getIstance(getContext()).getProp("image"))) {
-                Log.i("test", "sono qui");
+                Log.i("Magazzino_Fragment", "Carico le immagini");
                 ImageView imageView = (ImageView) rowView.findViewById(R.id.magazzino_immagine);
                 imageView.setImageBitmap(values.get(position).getImage());
             }
@@ -231,18 +220,38 @@ public class MagazzinoSearchFragment extends ListFragment implements AdapterView
         dialog.setContentView(R.layout.dialog_magazzino);
 
         ImageView img_dialog = (ImageView) dialog.findViewById(R.id.dialog_img);
+        TextView dialog_console = (TextView) dialog.findViewById(R.id.dialog_console);
+        TextView dialog_anno = (TextView) dialog.findViewById(R.id.dialog_anno);
+        TextView dialog_upc = (TextView) dialog.findViewById(R.id.dialog_upc);
+        TextView dialog_stato = (TextView) dialog.findViewById(R.id.dialog_stato);
+        TextView dialog_quality = (TextView) dialog.findViewById(R.id.dialog_quality);
+        TextView dialog_data_a = (TextView) dialog.findViewById(R.id.dialog_data_a);
+        TextView dialog_prezzo_a = (TextView) dialog.findViewById(R.id.dialog_prezzo_a);
+        TextView dialog_data_v = (TextView) dialog.findViewById(R.id.dialog_data_v);
+        TextView dialog_prezzo_v = (TextView) dialog.findViewById(R.id.dialog_prezzo_v);
         Button vendi_button = (Button) dialog.findViewById(R.id.dialog_button1);
         Button aggiungi_button = (Button) dialog.findViewById(R.id.dialog_button2);
         TextView note = (TextView) dialog.findViewById(R.id.dialog_text_note);
 
+
+        dialog_anno.setText(itemOb.anno);
+        dialog_upc.setText(itemOb.upc);
+        dialog_data_a.setText(itemOb.data_acquisto);
+        dialog_prezzo_a.setText("Acquisto: " + itemOb.prezzo_acquisto);
+        dialog_console.setText(itemOb.console);
+        dialog_stato.setText("Condizioni: "+ itemOb.stato);
+        dialog_quality.setText(itemOb.quality);
+
         if (itemOb.venduto){
             vendi_button.setEnabled(false);
+            dialog_data_v.setText(itemOb.data_vendita);
+            dialog_prezzo_v.setText("Vendita: " +itemOb.prezzo_vendita);
         }
 
         vendi_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DialogConfermaPopup vendiDialog = new DialogConfermaPopup(getContext());
+                DialogConfermaVendi vendiDialog = new DialogConfermaVendi(getContext());
                 JSONObject item = new JSONObject();
                 try {
                     item.put("nome",itemOb.nome);
@@ -251,6 +260,7 @@ public class MagazzinoSearchFragment extends ListFragment implements AdapterView
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+                dialog.dismiss();
             }
         });
 
@@ -306,6 +316,16 @@ public class MagazzinoSearchFragment extends ListFragment implements AdapterView
 
     private class CallServer extends AsyncTask<String, String, String> {
         ListViewArrayAdapter adapter;
+        ProgressDialog progressBar;
+
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            progressBar = new ProgressDialog(getContext());
+            progressBar.setCancelable(false);
+            progressBar.setMessage("File downloading ...");
+            progressBar.show();
+        }
 
         @Override
         protected String doInBackground(String... params) {
@@ -405,6 +425,14 @@ public class MagazzinoSearchFragment extends ListFragment implements AdapterView
                                         String.valueOf(item_JSON.get("nome")), String.valueOf(item_JSON.get("upc")), String.valueOf(item_JSON.get("anno")),
                                         String.valueOf(item_JSON.get("console")), String.valueOf(item_JSON.get("stato")), String.valueOf(item_JSON.get("quality")),
                                         String.valueOf(item_JSON.get("prezzo_acquisto")), String.valueOf(item_JSON.get("data_acquisto")), String.valueOf(item_JSON.get("prezzo_vendita")), String.valueOf(item_JSON.get("data_vendita")));
+
+                                if (Boolean.valueOf(GetProperties.getIstance(getContext()).getProp("image"))) {
+                                    JSONObject request = new JSONObject();
+                                    request.put("table", "immagine");
+                                    request.put("query", obj.upc);
+                                    obj.setImage(GetContent.GetImage(context,request,obj.upc));
+                                }
+
                                 ListViewContent.add(obj);
 
                             } catch (JSONException e) {
@@ -429,6 +457,7 @@ public class MagazzinoSearchFragment extends ListFragment implements AdapterView
         protected void onPostExecute(String result) {
 
             setListAdapter(adapter);
+            progressBar.dismiss();
 
         }
 

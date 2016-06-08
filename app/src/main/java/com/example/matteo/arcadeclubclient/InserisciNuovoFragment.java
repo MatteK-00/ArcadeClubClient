@@ -1,6 +1,7 @@
 package com.example.matteo.arcadeclubclient;
 
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -174,16 +175,30 @@ public class InserisciNuovoFragment extends ListFragment {
                     Log.i("Aggiungi_Fragment", "query = " + query);
 
                     if (ok) {
+                        ProgressDialog progressBar;
+                        progressBar = new ProgressDialog(getContext());
+                        progressBar.setCancelable(false);
+                        progressBar.setMessage("Invio in corso ...");
+                        progressBar.show();
+
                         request.put("method", "POST");
                         request.put("table", "magazzino");
                         request.put("query", query);
                         RestClient RestClient = com.example.matteo.arcadeclubclient.Utility.RestClient.getIstance(getContext());
                         RestClient.addRequest(request);
+
+                        Thread.sleep(2000);
+
+                        progressBar.dismiss();
+
+
                     }else {
                         Toast.makeText(getContext(), "Alcuni campi sono vuoti!",
                                 Toast.LENGTH_LONG).show();
                     }
                 } catch (JSONException e) {
+                    e.printStackTrace();
+                } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
 

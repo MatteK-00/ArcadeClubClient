@@ -18,11 +18,11 @@ import java.util.Calendar;
 /**
  * Created by matteo on 13/05/16.
  */
-public class DialogConfermaPopup{
+public class DialogConfermaVendi {
     private Dialog dialog;
     private Context context;
 
-    public DialogConfermaPopup(Context context){
+    public DialogConfermaVendi(Context context){
         this.context = context;
         }
 
@@ -44,7 +44,7 @@ public class DialogConfermaPopup{
                 try {
                     float prezzo = Float.parseFloat(String.valueOf(prezzoText.getText().toString()));
                     if (prezzo > 0){
-                        Toast.makeText(context, prezzo + " Mo ti tocca fare la put sul db", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, prezzo + "Invio in corso", Toast.LENGTH_SHORT).show();
                         Calendar c = Calendar.getInstance();
                         int day = c.get(Calendar.DAY_OF_MONTH);
                         int month = c.get(Calendar.MONTH);
@@ -71,6 +71,8 @@ public class DialogConfermaPopup{
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+
+                dialog.dismiss();
             }
         });
         dialog.show();

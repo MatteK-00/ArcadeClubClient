@@ -17,6 +17,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.example.matteo.arcadeclubclient.SQLiteDB.DataBaseManager;

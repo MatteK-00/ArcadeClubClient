@@ -12,8 +12,8 @@
 
         <ImageView
             android:id="@+id/magazzino_immagine"
-            android:layout_width="44dp"
-            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
             android:layout_marginTop="8dp"
@@ -30,128 +30,142 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true">
 
-            <TextView
-                android:id="@+id/magazzino_label_nome"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@+id/stato"
-                android:textSize="20sp" >
-            </TextView>
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:showDividers="middle|beginning">
 
-            <TextView
-                android:id="@+id/magazzino_label_stato"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@+id/stato"
-                android:textSize="20sp" >
-            </TextView>
+                <TextView
+                    android:id="@+id/magazzino_label_nome"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@+id/stato"
+                    android:textSize="20sp"
+                    android:layout_marginRight="10dp">
+                </TextView>
 
-            <TextView
-                android:id="@+id/magazzino_label_quality"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@+id/quality"
-                android:textSize="20sp" >
-            </TextView>
+            </LinearLayout>
 
-            <TextView
-                android:id="@+id/magazzino_label_prezzo_venduto"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@+id/quality"
-                android:textSize="20sp"
-                android:visibility="invisible">
-            </TextView>
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:showDividers="middle|beginning">
+
+                <TextView
+                    android:id="@+id/magazzino_label_console"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="20sp"
+                    android:layout_marginRight="10dp">
+                </TextView>
+
+                <TextView
+                    android:id="@+id/magazzino_label_anno"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="20sp"
+                    android:layout_marginRight="10dp">
+                </TextView>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:showDividers="middle|beginning">
+
+                <TextView
+                    android:id="@+id/magazzino_label_quality"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@+id/quality"
+                    android:textSize="20sp"
+                    android:layout_marginRight="10dp">
+                </TextView>
+
+                <TextView
+                    android:id="@+id/magazzino_label_stato"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@+id/stato"
+                    android:textSize="20sp"
+                    android:layout_marginRight="10dp">
+                </TextView>
+
+                <TextView
+                    android:id="@+id/magazzino_label_prezzo_acquisto"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:text="@+id/prezzo_vendita"
+                    android:textSize="20sp"
+                    android:visibility="invisible">
+                </TextView>
+
+                <TextView
+                    android:id="@+id/magazzino_label_upc"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:text="@+id/prezzo_vendita"
+                    android:textSize="20sp"
+                    android:elegantTextHeight="false"
+                    android:visibility="invisible">
+                </TextView>
+
+                <TextView
+                    android:id="@+id/magazzino_label_data_acquisto"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:text="@+id/data_vendita"
+                    android:textSize="20sp"
+                    android:visibility="invisible">
+                </TextView>
+
+                <TextView
+                    android:id="@+id/magazzino_label_prezzo_venduto"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:text="@+id/quality"
+                    android:textSize="20sp"
+                    android:visibility="invisible">
+                </TextView>
+
+                <TextView
+                    android:id="@+id/magazzino_label_data_venduto"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:text="@+id/data_vendita"
+                    android:textSize="20sp"
+                    android:visibility="invisible">
+                </TextView>
+
+                <TextView
+                    android:id="@+id/magazzino_note"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="20sp"
+                    android:visibility="invisible"
+                    android:maxHeight="0dp"
+                    android:maxWidth="0dp">
+                </TextView>
+
+                <TextView
+                    android:id="@+id/magazzino_id_item"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="20sp"
+                    android:visibility="invisible"
+                    android:maxHeight="0dp"
+                    android:maxWidth="0dp">
+                </TextView>
+            </LinearLayout>
 
 
         </LinearLayout>
 
 
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true">
-
-            <TextView
-                android:id="@+id/magazzino_label_upc"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@+id/prezzo_vendita"
-                android:textSize="20sp" >
-            </TextView>
-
-            <TextView
-                android:id="@+id/magazzino_label_prezzo_acquisto"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@+id/prezzo_vendita"
-                android:textSize="20sp" >
-            </TextView>
-
-            <TextView
-                android:id="@+id/magazzino_label_data_acquisto"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@+id/data_vendita"
-                android:textSize="20sp" >
-            </TextView>
-
-            <TextView
-                android:id="@+id/magazzino_label_data_venduto"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@+id/data_vendita"
-                android:textSize="20sp"
-                android:visibility="invisible">
-            </TextView>
-
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true">
-
-            <TextView
-                android:id="@+id/magazzino_label_console"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="20sp" >
-            </TextView>
-
-            <TextView
-                android:id="@+id/magazzino_label_anno"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="20sp" >
-            </TextView>
-
-            <TextView
-                android:id="@+id/magazzino_note"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="20sp"
-                android:visibility="invisible"
-                android:maxHeight="0dp"
-                android:maxWidth="0dp">
-            </TextView>
-
-            <TextView
-                android:id="@+id/magazzino_id_item"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="20sp"
-                android:visibility="invisible"
-                android:maxHeight="0dp"
-                android:maxWidth="0dp">
-            </TextView>
-
-        </LinearLayout>
     </LinearLayout>
 
 
