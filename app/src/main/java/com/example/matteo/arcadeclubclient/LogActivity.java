@@ -4,6 +4,7 @@ package com.example.matteo.arcadeclubclient;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -79,7 +80,7 @@ public class LogActivity extends AppCompatActivity {
 
     protected void onFinish() {
         super.finish();
-        Log.i("LogActivity", "On Start .....");
+        Log.i("LogActivity", "On Finish .....");
 
     }
 
@@ -109,7 +110,8 @@ public class LogActivity extends AppCompatActivity {
                 BufferedReader br = new BufferedReader(new InputStreamReader(
                         (conn.getInputStream())));
 
-
+                Log.i("LogActivity", "id device " + Settings.Secure.getString(getApplicationContext().getContentResolver(),
+                        Settings.Secure.ANDROID_ID));
                 Log.i("LogActivity", "Output from Server .... ");
                 while ((output = br.readLine()) != null) {
                     Log.i("LogActivity", (String) output.subSequence(1,(output.length()-1)));
@@ -129,8 +131,9 @@ public class LogActivity extends AppCompatActivity {
 
             } catch (MalformedURLException e) {
                 Log.i("LogActivity", (e.getMessage()));
-
             } catch (IOException e) {
+                Log.i("LogActivity", (e.getMessage()));
+            } catch (Exception e) {
                 Log.i("LogActivity", (e.getMessage()));
             }
 

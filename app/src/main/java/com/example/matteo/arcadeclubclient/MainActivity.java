@@ -1,10 +1,12 @@
 package com.example.matteo.arcadeclubclient;
 
+import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.ListFragment;
@@ -27,6 +29,7 @@ import com.example.matteo.arcadeclubclient.Utility.GetProperties;
 public class MainActivity extends AppCompatActivity {
 
 
+    private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 0;
     private DrawerLayout mDrawer;
     private Toolbar toolbar;
 
@@ -34,11 +37,12 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-        Log.i("id_DEVICE", Settings.Secure.getString(getApplicationContext().getContentResolver(),
-                Settings.Secure.ANDROID_ID));
-
         super.onCreate(savedInstanceState);
+
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_READ_CONTACTS);
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_READ_CONTACTS);
+
+
         setContentView(R.layout.activity_main);
 
         // Set a Toolbar to replace the ActionBar.

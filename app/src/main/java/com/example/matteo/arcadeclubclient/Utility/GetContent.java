@@ -47,7 +47,7 @@ public class GetContent {
                     if (Boolean.valueOf(GetProperties.getIstance(context).getProp("image"))) {
                         JSONObject image_request = new JSONObject();
                         image_request.put("table", "immagine");
-                        image_request.put("query", String.valueOf(info.get("id_gioco")) + "_"
+                        image_request.put("query", "id="+String.valueOf(info.get("id_gioco")) + "_"
                                 + String.valueOf(info.get("immagine")));
 
                         String immg = RestClient.executeGetRequest(image_request);

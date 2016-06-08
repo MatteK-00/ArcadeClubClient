@@ -21,6 +21,15 @@
             android:layout_height="wrap_content"
             android:weightSum="1">
 
+            <Button
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="BAR CODE"
+                android:id="@+id/buttonAttivaBarCode"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true" />
+
             <EditText
                 android:layout_width="166dp"
                 android:layout_height="wrap_content"
@@ -34,11 +43,21 @@
                 style="?android:attr/buttonStyleSmall"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="prova"
+                android:text="CALL SERVER"
                 android:id="@+id/buttonBARCODE"
                 android:layout_alignParentLeft="true"
-                android:layout_alignParentTop="true" />
+                android:layout_alignParentTop="true"
+                android:singleLine="false" />
         </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/item_nome"
+            android:textSize="20sp"
+            android:layout_gravity="center_horizontal"
+            android:elegantTextHeight="false"
+            android:gravity="center_horizontal" />
 
         <LinearLayout
             android:orientation="horizontal"
@@ -50,13 +69,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="10dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/item_nome"
-                    android:textSize="20sp"
-                    android:layout_gravity="center_vertical" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -109,8 +121,9 @@
                 android:id="@+id/imageView"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentTop="true"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginRight="10dp" />
+                android:layout_gravity="top|left"
+                android:layout_marginRight="10dp"
+                android:scaleType="fitXY" />
         </LinearLayout>
 
         <ListView

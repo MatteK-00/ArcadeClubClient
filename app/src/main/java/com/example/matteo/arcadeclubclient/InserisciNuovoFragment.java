@@ -115,7 +115,7 @@ public class InserisciNuovoFragment extends ListFragment {
                 nuovo_upc.setText(item_JSON.get("upc").toString());
                 nuovo_console.setText(item_JSON.get("console").toString());
                 nuovo_anno.setText(item_JSON.get("anno").toString());
-                nuovo_data_acquisto.setText(new Utility().getDate());
+                nuovo_data_acquisto.setText(Utility.getDate());
                 nuovo_prezzo_acquisto.setHintTextColor(Color.RED);
                 String nuovo_stato = item_JSON.get("stato").toString();
                 if (!nuovo_stato.equals(null)) {

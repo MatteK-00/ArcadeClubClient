@@ -53,8 +53,10 @@ public class DataBaseManager {
 
     //aprire connesione DB
     private static void open() throws SQLException {
+        Log.i("DB locale","open DB");
         dbHelper = new SQLiteHelperManager(context);
         db = dbHelper.getWritableDatabase();
+        Log.i("DB locale","open DB" + dbHelper + db);
     }
     //chiudere connesione DB
     private static void close() {
@@ -158,6 +160,7 @@ public class DataBaseManager {
 
 
     public static long addImage(String upc, String immagini) {
+        Log.i("DB locale","aggiunta immagine");
         ContentValues values = new ContentValues();
         values.put(UPC, upc);
         values.put(IMMAGINE, immagini);

@@ -7,6 +7,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
@@ -56,8 +57,6 @@ public class BarCodeSearchFragment  extends ListFragment implements AdapterView.
     private boolean FLAG = true;
 
 
-    //public BarCodeSearchFragment() {
-    //}
 
 
 
@@ -80,31 +79,37 @@ public class BarCodeSearchFragment  extends ListFragment implements AdapterView.
         }
 
         Button button = (Button) view.findViewById(R.id.buttonBARCODE);
+        Button buttonBRCODE = (Button) view.findViewById(R.id.buttonAttivaBarCode);
         Button button_aggiungi = (Button) view.findViewById(R.id.aggiungi_nuovo_button);
 
-
-        //mylist = (ListView) view.findViewById(R.id.listViewBRS);
-        //mylist.setOnClickListener();
 
         final String request = "013388130290";
         //final String request = "720238101804";
         //final String request = "3286010000057";
 
 
+        buttonBRCODE.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                barCodeSearch();
+            }
+        });
+
         button.setOnClickListener(new View.OnClickListener()
         {
             @Override
-            public void onClick(View v)
-            {
-                barcode.setText(request);
-                if (Utility.isOnline(getContext())) {
+            public void onClick(View v) {
+                if (barcode.getText().toString().equals(""))
+                    barcode.setText(request);
 
-                    new CallServer().execute(request);
-                } else{
+                if (Utility.isOnline(getContext())) {
+                    new CallServer().execute(String.valueOf(barcode.getText()));
+                } else {
                     Toast.makeText(getContext(), "Connessione internet assente!",
                             Toast.LENGTH_LONG).show();
                 }
             }
+
         });
 
         button_aggiungi.setOnClickListener(new View.OnClickListener() {
@@ -174,7 +179,7 @@ public class BarCodeSearchFragment  extends ListFragment implements AdapterView.
         }
     }
 
-    public void itemDialogPopup(JSONObject item) {
+    public void itemDialogPopup(final JSONObject item) {
         final Dialog dialog = new Dialog(getContext());
         dialog.setContentView(R.layout.dialog_magazzino);
 
@@ -191,20 +196,14 @@ public class BarCodeSearchFragment  extends ListFragment implements AdapterView.
         TextView note = (TextView) dialog.findViewById(R.id.dialog_text_note);
 
 
-        dialog_anno.setText(nome.getText());
+        dialog_anno.setText(anno.getText());
         dialog_upc.setText(upc.getText());
         dialog_console.setText(console.getText());
 
         if (Boolean.valueOf(GetProperties.getIstance(getContext()).getProp("image"))){
-            try {
-                JSONObject REQUEST = new JSONObject();
-                REQUEST.put("method", "GET");
-                REQUEST.put("table", "search_upc");
-                REQUEST.put("query", "upc="+ upc.getText());
-                img_dialog.setImageBitmap(GetContent.getImage(getContext(),REQUEST, (String) upc.getText()));
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+            ImageView imageView = (ImageView) view.findViewById(R.id.imageView);
+            Bitmap bm=((BitmapDrawable)imageView.getDrawable()).getBitmap();
+            img_dialog.setImageBitmap(bm);
         }
 
         try {
@@ -222,11 +221,12 @@ public class BarCodeSearchFragment  extends ListFragment implements AdapterView.
             @Override
             public void onClick(View v) {
                 DialogConfermaVendi vendiDialog = new DialogConfermaVendi(getContext());
-                JSONObject item = new JSONObject();
+                JSONObject item_send = new JSONObject();
                 try {
-                    item.put("nome",nome.getText());
-                    item.put("id_item",id_gioco.getText());
-                    vendiDialog.vendi_item(item);
+                    Log.i("Dialog",item.toString());
+                    item_send.put("nome",nome.getText().toString());
+                    item_send.put("id_item",item.getString("id_item"));
+                    vendiDialog.vendi_item(item_send);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -243,16 +243,16 @@ public class BarCodeSearchFragment  extends ListFragment implements AdapterView.
                 Bundle bundle = new Bundle();
 
                 try {
-                    JSONObject item = new JSONObject();
-                    item.put("nome",nome.getText());
-                    item.put("upc",upc.getText());
-                    item.put("console",console.getText());
-                    item.put("stato", item.getString("stato"));
-                    item.put("anno",anno.getText());
-                    item.put("console",console.getText());
-                    item.put("note",item.getString("note"));
-                    item.put("quality",item.getString("quality"));
-                    bundle.putString("item", item.toString());
+                    JSONObject item_bundle = new JSONObject();
+                    item_bundle.put("nome",nome.getText());
+                    item_bundle.put("upc",upc.getText());
+                    item_bundle.put("console",console.getText());
+                    item_bundle.put("stato", item.getString("stato"));
+                    item_bundle.put("anno",anno.getText());
+                    item_bundle.put("console",console.getText());
+                    item_bundle.put("note",item.getString("note"));
+                    item_bundle.put("quality",item.getString("quality"));
+                    bundle.putString("item", item_bundle.toString());
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -284,7 +284,7 @@ public class BarCodeSearchFragment  extends ListFragment implements AdapterView.
         }
         if (!noteString.equals("null"))
             note.setText(noteString);
-        
+
         dialog.show();
     }
 
@@ -315,7 +315,6 @@ public class BarCodeSearchFragment  extends ListFragment implements AdapterView.
             Log.e("BarCode Scanner", data.getStringExtra("SCAN_RESULT_FORMAT"));
             Log.i("BarCode Scanner", content);
             barcode.setText(content);
-
         }
     }
 
@@ -410,10 +409,9 @@ public class BarCodeSearchFragment  extends ListFragment implements AdapterView.
                     info_String.add(5, String.valueOf(info.get("immagine")));
 
                     if (Boolean.valueOf(GetProperties.getIstance(getContext()).getProp("image"))) {
-                        Log.i("BarCodeSearch","Sto caricaondo l'immagine nel dialog");
                         JSONObject request = new JSONObject();
                         request.put("table", "immagine");
-                        request.put("query", String.valueOf(info.get("id_gioco")) + "_"
+                        request.put("query","id="+ String.valueOf(info.get("id_gioco")) + "_"
                                 + String.valueOf(info.get("immagine")));
                         image = GetContent.getImage(getContext(),request,info_String.get(1));
                     }
@@ -436,6 +434,7 @@ public class BarCodeSearchFragment  extends ListFragment implements AdapterView.
                                 Log.i("BCS_Fragment", str);
 
                                 JSONObject item_JSON = new JSONObject(str);
+                                //Log.i("BRC_search",item_JSON.toString());
                                 ListViewContent.add(item_JSON);
 
 
@@ -461,16 +460,16 @@ public class BarCodeSearchFragment  extends ListFragment implements AdapterView.
 
         protected void onPostExecute(String result) {
             Log.i("CONTROLLO",output);
+            TextView nome = (TextView) view.findViewById(R.id.item_nome);
+            TextView upc = (TextView) view.findViewById(R.id.item_upc);
+            TextView anno = (TextView) view.findViewById(R.id.item_anno);
+            TextView console = (TextView) view.findViewById(R.id.item_console);
+            TextView hidden_image = (TextView) view.findViewById(R.id.item_hidden_image);
+            TextView id_gioco = (TextView) view.findViewById(R.id.item_hidden_id);
+            ImageView image_field = (ImageView) view.findViewById(R.id.imageView);
+            Button button_aggiungi = (Button) view.findViewById(R.id.aggiungi_nuovo_button);
             if (!output.equals("ERRORE") && output!=null) {
-                TextView nome = (TextView) view.findViewById(R.id.item_nome);
-                TextView upc = (TextView) view.findViewById(R.id.item_upc);
-                TextView anno = (TextView) view.findViewById(R.id.item_anno);
-                TextView console = (TextView) view.findViewById(R.id.item_console);
-                TextView hidden_image = (TextView) view.findViewById(R.id.item_hidden_image);
-                TextView id_gioco = (TextView) view.findViewById(R.id.item_hidden_id);
-                ImageView image_field = (ImageView) view.findViewById(R.id.imageView);
 
-                Button button_aggiungi = (Button) view.findViewById(R.id.aggiungi_nuovo_button);
                 button_aggiungi.setVisibility(view.VISIBLE);
                 button_aggiungi.setEnabled(true);
 
@@ -488,8 +487,17 @@ public class BarCodeSearchFragment  extends ListFragment implements AdapterView.
 
                 setListAdapter(adapter);
             } else {
-                Toast.makeText(getContext(), "Server Off-line",
+                Toast.makeText(getContext(), "Server Off-line o UPC sconosciuto",
                         Toast.LENGTH_LONG).show();
+                button_aggiungi.setVisibility(view.INVISIBLE);
+                nome.setText(null);
+                upc.setText(null);
+                anno.setText(null);
+                console.setText(null);
+                hidden_image.setText(null);
+                id_gioco.setText(null);
+                image_field.setImageBitmap(null);
+
             }
 
             progressBar.dismiss();

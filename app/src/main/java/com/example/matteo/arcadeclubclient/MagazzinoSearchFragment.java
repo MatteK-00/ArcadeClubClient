@@ -392,7 +392,7 @@ public class MagazzinoSearchFragment extends ListFragment implements AdapterView
                                 if (Boolean.valueOf(GetProperties.getIstance(getContext()).getProp("image"))) {
                                     JSONObject request = new JSONObject();
                                     request.put("table", "immagine");
-                                    request.put("query", obj.upc);
+                                    request.put("query", "id="+obj.upc);
                                     obj.setImage(GetContent.getImage(context,request,obj.upc));
                                 }
 
@@ -429,7 +429,7 @@ public class MagazzinoSearchFragment extends ListFragment implements AdapterView
                                 if (Boolean.valueOf(GetProperties.getIstance(getContext()).getProp("image"))) {
                                     JSONObject request = new JSONObject();
                                     request.put("table", "immagine");
-                                    request.put("query", obj.upc);
+                                    request.put("query", "id="+obj.upc);
                                     obj.setImage(GetContent.getImage(context,request,obj.upc));
                                 }
 

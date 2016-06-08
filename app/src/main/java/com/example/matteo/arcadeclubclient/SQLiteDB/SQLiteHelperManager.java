@@ -3,6 +3,7 @@ package com.example.matteo.arcadeclubclient.SQLiteDB;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 
 /**
@@ -22,6 +23,7 @@ public class SQLiteHelperManager extends SQLiteOpenHelper{
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+        Log.i("DB locale","creazione database");
         //creazione tabelle
         String CREATE_GIOCHI_TABLE = "CREATE TABLE giochi (" +
                 "UPC TEXT PRIMARY KEY, " +

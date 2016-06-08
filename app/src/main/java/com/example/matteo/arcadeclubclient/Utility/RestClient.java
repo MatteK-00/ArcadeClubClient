@@ -3,6 +3,7 @@ package com.example.matteo.arcadeclubclient.Utility;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.IBinder;
@@ -24,6 +25,7 @@ import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -36,13 +38,16 @@ import java.util.Queue;
 public class RestClient {
 
     static String url = "http://188.166.49.29:10101/arcadeclub/";
-    static Queue coda_richieste=null;
     static Context context;
+    private static String id_device;
+    static int venduti = 0;
+    static int comprati = 0;
 
     private static RestClient istance = null; //riferimento all' istanza
 
     public RestClient(Context context){   //costruttore
         this.context = context;
+        this.id_device = GetProperties.getIstance(context).getProp("idDevice");
         //this.coda_richieste  = new LinkedList<>();
 
     }
@@ -59,17 +64,14 @@ public class RestClient {
             //return (executeGetRequest(Element));
 
         } else if (Element.get("method").toString() == "POST") {
-            if (coda_richieste == null) {
-                coda_richieste = new LinkedList<>();
-                coda_richieste.add(Element);
-                Log.i("RestClient_Service", "Prima di lanciarlo");
-                Intent intent = new Intent(context, QueueService.class);
-                context.startService(intent);
-                //context.startService(new Intent(context, QueueService.class));
-                Log.i("RestClient_Service", "Dopo il lancio");
-            } else {
-                coda_richieste.add(Element);
-            }
+            Log.i("RestClient_Service", "Prima di lanciarlo");
+            Intent intent = new Intent(context, QueueService.class);
+            intent.putExtra("obj",Element.toString());
+            context.startService(intent);
+            //context.startService(new Intent(context, QueueService.class));
+            Log.i("RestClient_Service", "Dopo il lancio");
+
+
         }
     }
 
@@ -77,7 +79,7 @@ public class RestClient {
     public static String executeGetRequest(JSONObject query) {
         try {
             GetProperties prop = GetProperties.getIstance(context);
-            URL url_request = new URL(url + prop.getProp("idDevice") + "/" +query.get("table").toString() +
+            URL url_request = new URL(url + id_device + "/" +query.get("table").toString() +
                     "/"+query.get("table").toString()+"?"+query.get("query").toString());
             Log.i("RestClient_Service", url_request.toString());
             HttpURLConnection conn = (HttpURLConnection) url_request.openConnection();
@@ -90,7 +92,7 @@ public class RestClient {
                     Toast.makeText(context, "Server Off-line o immagine non in archivio",
                             Toast.LENGTH_LONG).show();
                 }
-                throw new RuntimeException("Failed : HTTP error code : " + conn.getResponseCode());
+                Log.i("Errore http","Failed : HTTP error code : " + conn.getResponseCode());
             }
 
             BufferedReader br = new BufferedReader(new InputStreamReader(
@@ -119,10 +121,10 @@ public class RestClient {
     }
 
 
-        public static class QueueService extends Service {
+    public static class QueueService extends Service {
         private Looper mServiceLooper;
         private ServiceHandler mServiceHandler;
-        private GetProperties prop = GetProperties.getIstance(context);
+        private static ArrayList coda_locale;
 
         public QueueService() {
             super();
@@ -134,25 +136,27 @@ public class RestClient {
             public ServiceHandler(Looper looper) {
                 super(looper);
             }
+
             @Override
             public void handleMessage(Message msg) {
+
                 Log.i("RestClient_Service", "handleMessage");
 
-                if (!Utility.isOnline(context)) {
+                if (!Utility.serverReachable()) {
                     try {
-                        Log.i("RestClient_Service", "Nessuna connessione internet");
-                        Thread.sleep(60000);
+                        Log.i("RestClient_Service", "Nessuna connessione internet o server non raggiungibile");
+                        Thread.sleep(15000);
                     } catch (InterruptedException e) {
                         // Restore interrupt status.
                         Log.i("RestClient_Service", "Errore nello sleep");
                         Thread.currentThread().interrupt();
                     }
                 } else {
-                    while (!coda_richieste.isEmpty()) {
+                    while (!coda_locale.isEmpty()) {
                         try {
 
-                            JSONObject query = new JSONObject(coda_richieste.remove().toString());
-                            URL url_request = new URL(url+ prop.getProp("idDevice") + "/" + query.get("table").toString());
+                            JSONObject query = new JSONObject(coda_locale.remove(0).toString());
+                            URL url_request = new URL(url+ id_device + "/" + query.get("table").toString());
                             Log.i("RestClient_Service", url_request.toString());
                             HttpURLConnection conn = (HttpURLConnection) url_request.openConnection();
                             conn.setDoOutput(true);
@@ -164,10 +168,15 @@ public class RestClient {
                             out.close();
 
                             if (conn.getResponseCode() != 200) {
-                                coda_richieste.add(query.toString());
+                                coda_locale.add(query);
                                 Thread.sleep(5000);
                                 Log.i("RestClient_Service", "Failed : HTTP error code : " + conn.getResponseCode());
                                 //throw new RuntimeException("Failed : HTTP error code : " + conn.getResponseCode());
+                            } else {
+                                if (query.get("table").equals("magazzino"))
+                                    comprati++;
+                                else
+                                    venduti++;
                             }
 
                         } catch (MalformedURLException e) {
@@ -198,6 +207,7 @@ public class RestClient {
             HandlerThread thread = new HandlerThread("ServiceStartArguments");
             thread.start();
 
+
             // Get the HandlerThread's Looper and use it for our Handler
             mServiceLooper = thread.getLooper();
             mServiceHandler = new ServiceHandler(mServiceLooper);
@@ -214,6 +224,19 @@ public class RestClient {
             msg.arg1 = startId;
             mServiceHandler.sendMessage(msg);
 
+            if (intent != null) {
+                if (coda_locale == null)
+                    this.coda_locale = new ArrayList<>();
+                Bundle b = intent.getExtras();
+                String Json = b.getString("obj"); //.getgetStringExtra("obj");
+                Log.i("RestClient_Service json", Json);
+                try {
+                    JSONObject jsn = new JSONObject(Json);
+                    this.coda_locale.add(jsn);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
             // If we get killed, after returning from here, restart
             return START_STICKY;
         }
@@ -227,7 +250,9 @@ public class RestClient {
         @Override
         public void onDestroy() {
             Log.i("RestClient_Service", "onDestroy");
-            coda_richieste = null;
+            Utility.sendNotification(context,comprati,venduti);
+            comprati = 0;
+            venduti = 0;
             Toast.makeText(this, "service done", Toast.LENGTH_SHORT).show();
         }
     }
