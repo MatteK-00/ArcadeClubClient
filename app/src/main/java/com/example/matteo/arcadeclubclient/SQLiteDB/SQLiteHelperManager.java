@@ -32,12 +32,18 @@ public class SQLiteHelperManager extends SQLiteOpenHelper{
                 "CONSOLE TEXT," +
                 "IMMAGINE TEXT )";
 
-        String CREATE_GIOCHI_IMMAGINI = "CREATE TABLE immagini (" +
+        String CREATE_IMMAGINI_TABLE = "CREATE TABLE immagini (" +
                 "UPC TEXT PRIMARY KEY, " +
                 "IMMAGINE TEXT )";
 
+        String CREATE_CODA_TABLE = "CREATE TABLE coda (" +
+                "ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "RICHIESTA TEXT," +
+                "ID_DEVICE TEXT )";
+
         db.execSQL(CREATE_GIOCHI_TABLE);
-        db.execSQL(CREATE_GIOCHI_IMMAGINI);
+        db.execSQL(CREATE_IMMAGINI_TABLE);
+        db.execSQL(CREATE_CODA_TABLE);
     }
 
     @Override

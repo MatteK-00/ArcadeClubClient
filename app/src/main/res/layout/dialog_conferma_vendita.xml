@@ -14,14 +14,18 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:id="@+id/dialog_testo_conferma"
-            android:text="Sei sicuro di voler vendere questo oggetto? In caso affermativo  seleziona il prezzo di vendita e premi &quot;Vendi&quot;." />
+            android:text="Sei sicuro di voler vendere questo oggetto? In caso affermativo  seleziona il prezzo di vendita e premi &quot;Vendi&quot;."
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:gravity="center_horizontal" />
 
         <EditText
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:id="@+id/dialog_prezzo"
             android:hint="prezzo"
-            android:layout_gravity="center_horizontal" />
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal" />
 
         <Button
             android:layout_width="wrap_content"

@@ -13,6 +13,8 @@ import android.util.Base64;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.matteo.arcadeclubclient.SQLiteDB.DataBaseManager;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -39,7 +41,6 @@ public class RestClient {
 
     static String url = "http://188.166.49.29:10101/arcadeclub/";
     static Context context;
-    private static String id_device;
     static int venduti = 0;
     static int comprati = 0;
 
@@ -47,7 +48,6 @@ public class RestClient {
 
     public RestClient(Context context){   //costruttore
         this.context = context;
-        this.id_device = GetProperties.getIstance(context).getProp("idDevice");
         //this.coda_richieste  = new LinkedList<>();
 
     }
@@ -65,8 +65,13 @@ public class RestClient {
 
         } else if (Element.get("method").toString() == "POST") {
             Log.i("RestClient_Service", "Prima di lanciarlo");
+
+            DataBaseManager db = new DataBaseManager(context);
+            long prova = db.addReq(Element.toString(),GetProperties.getIstance(context).getProp("idDevice"));
+
+            Log.i("RestClient_Service", "prova = "+ String.valueOf(prova));
+
             Intent intent = new Intent(context, QueueService.class);
-            intent.putExtra("obj",Element.toString());
             context.startService(intent);
             //context.startService(new Intent(context, QueueService.class));
             Log.i("RestClient_Service", "Dopo il lancio");
@@ -79,7 +84,7 @@ public class RestClient {
     public static String executeGetRequest(JSONObject query) {
         try {
             GetProperties prop = GetProperties.getIstance(context);
-            URL url_request = new URL(url + id_device + "/" +query.get("table").toString() +
+            URL url_request = new URL(url + prop.getProp("idDevice") + "/" +query.get("table").toString() +
                     "/"+query.get("table").toString()+"?"+query.get("query").toString());
             Log.i("RestClient_Service", url_request.toString());
             HttpURLConnection conn = (HttpURLConnection) url_request.openConnection();
@@ -99,11 +104,9 @@ public class RestClient {
                     (conn.getInputStream())));
 
             String output;
-            Log.i("Get_Image", "Output from Server .... ");
+            Log.i("executeGetRequest", "Output from Server .... ");
             while ((output = br.readLine()) != null) {
-
-                Log.i("Get_Image", output);
-
+                Log.i("executeGetRequest", output);
 
                 return output;
             }
@@ -125,6 +128,7 @@ public class RestClient {
         private Looper mServiceLooper;
         private ServiceHandler mServiceHandler;
         private static ArrayList coda_locale;
+        private static ArrayList richieste_processate;
 
         public QueueService() {
             super();
@@ -142,10 +146,11 @@ public class RestClient {
 
                 Log.i("RestClient_Service", "handleMessage");
 
+
                 if (!Utility.serverReachable()) {
                     try {
                         Log.i("RestClient_Service", "Nessuna connessione internet o server non raggiungibile");
-                        Thread.sleep(15000);
+                        Thread.sleep(60000);
                     } catch (InterruptedException e) {
                         // Restore interrupt status.
                         Log.i("RestClient_Service", "Errore nello sleep");
@@ -155,8 +160,9 @@ public class RestClient {
                     while (!coda_locale.isEmpty()) {
                         try {
 
-                            JSONObject query = new JSONObject(coda_locale.remove(0).toString());
-                            URL url_request = new URL(url+ id_device + "/" + query.get("table").toString());
+                            JSONObject json_request = new JSONObject(coda_locale.remove(0).toString());
+                            JSONObject query = new JSONObject(json_request.get("request").toString());
+                            URL url_request = new URL(url+ json_request.get("id_device").toString() + "/" + query.get("table").toString());
                             Log.i("RestClient_Service", url_request.toString());
                             HttpURLConnection conn = (HttpURLConnection) url_request.openConnection();
                             conn.setDoOutput(true);
@@ -168,11 +174,12 @@ public class RestClient {
                             out.close();
 
                             if (conn.getResponseCode() != 200) {
-                                coda_locale.add(query);
+                                coda_locale.add(json_request.toString());
                                 Thread.sleep(5000);
                                 Log.i("RestClient_Service", "Failed : HTTP error code : " + conn.getResponseCode());
                                 //throw new RuntimeException("Failed : HTTP error code : " + conn.getResponseCode());
                             } else {
+                                richieste_processate.add(json_request.get("id"));
                                 if (query.get("table").equals("magazzino"))
                                     comprati++;
                                 else
@@ -204,6 +211,12 @@ public class RestClient {
             // separate thread because the service normally runs in the process's
             // main thread, which we don't want to block.  We also make it
             // background priority so CPU-intensive work will not disrupt our UI.
+
+            richieste_processate = new ArrayList();
+            coda_locale = new ArrayList();
+
+            DataBaseManager db = new DataBaseManager(this);
+            coda_locale = db.getRequests();
             HandlerThread thread = new HandlerThread("ServiceStartArguments");
             thread.start();
 
@@ -224,19 +237,6 @@ public class RestClient {
             msg.arg1 = startId;
             mServiceHandler.sendMessage(msg);
 
-            if (intent != null) {
-                if (coda_locale == null)
-                    this.coda_locale = new ArrayList<>();
-                Bundle b = intent.getExtras();
-                String Json = b.getString("obj"); //.getgetStringExtra("obj");
-                Log.i("RestClient_Service json", Json);
-                try {
-                    JSONObject jsn = new JSONObject(Json);
-                    this.coda_locale.add(jsn);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
             // If we get killed, after returning from here, restart
             return START_STICKY;
         }
@@ -249,8 +249,16 @@ public class RestClient {
 
         @Override
         public void onDestroy() {
+
+            DataBaseManager db = new DataBaseManager(this);
+            while (!richieste_processate.isEmpty()) {
+                int id = Integer.parseInt(richieste_processate.remove(0).toString());
+                db.deleteReq(id);
+            }
+
             Log.i("RestClient_Service", "onDestroy");
-            Utility.sendNotification(context,comprati,venduti);
+
+            Utility.sendNotification(this,comprati,venduti);
             comprati = 0;
             venduti = 0;
             Toast.makeText(this, "service done", Toast.LENGTH_SHORT).show();

@@ -52,7 +52,7 @@ public class GetContent {
 
                         String immg = RestClient.executeGetRequest(image_request);
 
-
+                        Log.i("Get_content",info.toString());
                         if (db.getImage(String.valueOf(info.get("upc"))).equals(""))
                             db.addImage(String.valueOf(info.get("upc")),immg);
                         //Utility.saveImage(info.get("id_gioco").toString() + "_" + info.get("immagine").toString());
@@ -91,8 +91,10 @@ public class GetContent {
     public static Bitmap getImage(Context context, JSONObject request, String upc){
         DataBaseManager db = new DataBaseManager(context);
         String result = db.getImage(upc);
+        Log.i("res DB", result);
         if (result.equals("")){
             result = RestClient.executeGetRequest(request);
+            db.addImage(upc,result);
         }
         Log.i("res DB", result);
         byte[] decodedString = Base64.decode(result, Base64.DEFAULT);

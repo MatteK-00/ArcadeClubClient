@@ -35,6 +35,7 @@ public class DataBaseManager {
 
     public static final String TABLE_GIOCHI = "giochi";
     public static final String TABLE_IMMAGINI = "immagini";
+    public static final String TABLE_CODA = "coda";
     //tab giochi column name
     public static final String UPC = "UPC";
     public static final String NOME = "NOME";
@@ -42,6 +43,10 @@ public class DataBaseManager {
     public static final String CONSOLE = "CONSOLE";
     public static final String IMMAGINE = "IMMAGINE";
 
+
+    public static final String ID = "ID";
+    public static final String RICHIESTA = "RICHIESTA";
+    public static final String ID_DEVICE = "ID_DEVICE";
     public static final String BITMAP = "BITMAP";
 
 
@@ -183,6 +188,48 @@ public class DataBaseManager {
         close();
         return Bitmap;
     }
+
+    public static long addReq(String request, String id_device) {
+        Log.i("DB locale","aggiunta richiesta");
+        ContentValues values = new ContentValues();
+        values.put(RICHIESTA, request);
+        values.put(ID_DEVICE, id_device);
+        open();
+        long res=db.insertOrThrow(TABLE_CODA, null, values);
+        close();
+        Log.i("DB_Manager",String.valueOf(res));
+        return res;
+    }
+
+
+    public static ArrayList getRequests() {
+        open();
+        Cursor cursor = db.rawQuery("select * from coda", new String[] {});
+
+        ArrayList codaRichieste = new ArrayList();
+        while (cursor.moveToNext()) {
+            JSONObject json = new JSONObject();
+            try {
+                json.put("id",cursor.getString(cursor.getColumnIndex(ID)));
+                json.put("request",cursor.getString(cursor.getColumnIndex(RICHIESTA)));
+                json.put("id_device",cursor.getString(cursor.getColumnIndex(ID_DEVICE)));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            codaRichieste.add(json);
+        }
+        close();
+        return codaRichieste;
+    }
+
+    public static boolean deleteReq(int id) {
+        String[] id_g={String.valueOf(id)};
+        open();
+        boolean res = db.delete(TABLE_CODA, ID + "=?", id_g) > 0;
+        close();
+        return res;
+    }
+
 
 
 }
