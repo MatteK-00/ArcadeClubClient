@@ -122,7 +122,7 @@ public class Utility {
         mBuilder.setContentTitle("ArcadeClub");
         mBuilder.setContentText("La modifica al database remoto è avvenuta con successo!");
         mBuilder.setTicker("ArcadeClub Alert!");
-        mBuilder.setSmallIcon(R.drawable.ic_menu_camera);
+        mBuilder.setSmallIcon(R.drawable.app_games);
         mBuilder.setSound(uri);
         mBuilder.setAutoCancel(true);
 
