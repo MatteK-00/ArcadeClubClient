@@ -65,14 +65,14 @@
 
                     <Spinner
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="50dp"
                         android:id="@+id/spinner"
                         android:layout_gravity="center_horizontal"
                         android:entries="@array/spinner1_field" />
 
                     <Spinner
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="50dp"
                         android:id="@+id/spinner2"
                         android:entries="@array/spinner2_field"/>
 

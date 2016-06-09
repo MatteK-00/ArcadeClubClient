@@ -204,7 +204,7 @@ public class MagazzinoSearchFragment extends ListFragment implements AdapterView
             data_acquisto.setText(values.get(position).data_acquisto);
             note.setText(values.get(position).note);
 
-            if (Boolean.valueOf(GetProperties.getIstance(getContext()).getProp("image"))) {
+            if (Boolean.valueOf(GetProperties.getProp("image"))) {
                 Log.i("Magazzino_Fragment", "Carico le immagini");
                 ImageView imageView = (ImageView) rowView.findViewById(R.id.magazzino_immagine);
                 imageView.setImageBitmap(values.get(position).getImage());
@@ -355,7 +355,7 @@ public class MagazzinoSearchFragment extends ListFragment implements AdapterView
                 REQUEST.put("method", "GET");
                 REQUEST.put("table", "magazzino");
                 REQUEST.put("query", query);
-                output = RestClient.getIstance(getContext()).executeGetRequest(REQUEST);
+                output = RestClient.executeGetRequest(REQUEST);
 
                 if (!output.equals("ERRORE") && output != null) {
 
@@ -389,7 +389,7 @@ public class MagazzinoSearchFragment extends ListFragment implements AdapterView
                                         String.valueOf(item_JSON.get("prezzo_acquisto")), String.valueOf(item_JSON.get("data_acquisto")));
 
 
-                                if (Boolean.valueOf(GetProperties.getIstance(getContext()).getProp("image"))) {
+                                if (Boolean.valueOf(GetProperties.getProp("image"))) {
                                     JSONObject request = new JSONObject();
                                     request.put("table", "immagine");
                                     request.put("query", "id="+obj.upc);
@@ -426,7 +426,7 @@ public class MagazzinoSearchFragment extends ListFragment implements AdapterView
                                         String.valueOf(item_JSON.get("console")), String.valueOf(item_JSON.get("stato")), String.valueOf(item_JSON.get("quality")),
                                         String.valueOf(item_JSON.get("prezzo_acquisto")), String.valueOf(item_JSON.get("data_acquisto")), String.valueOf(item_JSON.get("prezzo_vendita")), String.valueOf(item_JSON.get("data_vendita")));
 
-                                if (Boolean.valueOf(GetProperties.getIstance(getContext()).getProp("image"))) {
+                                if (Boolean.valueOf(GetProperties.getProp("image"))) {
                                     JSONObject request = new JSONObject();
                                     request.put("table", "immagine");
                                     request.put("query", "id="+obj.upc);

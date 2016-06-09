@@ -16,13 +16,10 @@ import android.support.v4.app.TaskStackBuilder;
 import com.example.matteo.arcadeclubclient.MainActivity;
 import com.example.matteo.arcadeclubclient.R;
 
-import org.json.JSONObject;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
@@ -48,6 +45,7 @@ public class Utility {
             sock.connect(sockaddr, timeoutMs);
             exists = true;
         }catch(Exception e){
+
         }
         return exists;
     }

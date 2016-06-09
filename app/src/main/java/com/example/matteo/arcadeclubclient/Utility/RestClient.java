@@ -3,13 +3,11 @@ package com.example.matteo.arcadeclubclient.Utility;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
-import android.util.Base64;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -23,13 +21,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
-import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Queue;
 
 
 /**
@@ -48,8 +43,6 @@ public class RestClient {
 
     public RestClient(Context context){   //costruttore
         this.context = context;
-        //this.coda_richieste  = new LinkedList<>();
-
     }
 
     public static RestClient getIstance(Context context) {

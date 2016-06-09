@@ -53,11 +53,13 @@ public class InserisciNuovoFragment extends ListFragment {
         final Spinner spinner_stato = (Spinner) view.findViewById(R.id.spinner);
         // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<CharSequence> adapter_stato = ArrayAdapter.createFromResource(getContext(),
-                R.array.spinner1_field, android.R.layout.simple_spinner_item);
+                R.array.spinner1_field_aggiungi, android.R.layout.simple_spinner_item);
         // Specify the layout to use when the list of choices appears
         adapter_stato.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner
         spinner_stato.setAdapter(adapter_stato);
+
+
 
         spinner_stato.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -76,7 +78,7 @@ public class InserisciNuovoFragment extends ListFragment {
         final Spinner spinner_quality = (Spinner) view.findViewById(R.id.spinner2);
         // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<CharSequence> adapter_quality = ArrayAdapter.createFromResource(getContext(),
-                R.array.spinner2_field, android.R.layout.simple_spinner_item);
+                R.array.spinner2_field_aggiungi, android.R.layout.simple_spinner_item);
         // Specify the layout to use when the list of choices appears
         adapter_quality.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner
@@ -155,11 +157,11 @@ public class InserisciNuovoFragment extends ListFragment {
                         ok = false;
                         nuovo_anno.setHintTextColor(Color.RED);
                     } else {query+="anno=" + nuovo_anno.getText() + "&";}
-                    if (comboBox_nuovo_stato[0].equals("All")){
+                    if (comboBox_nuovo_stato[0].equals("Stato")){
                         ok = false;
                         spinner_stato.setBackgroundColor(Color.RED);
                     } else {query+="stato=" + comboBox_nuovo_stato[0] + "&";}
-                    if (comboBox_nuovo_quality[0].equals("All")){
+                    if (comboBox_nuovo_quality[0].equals("Quality")){
                         ok = false;
                         spinner_quality.setBackgroundColor(Color.RED);
                     } else {query+="quality=" + comboBox_nuovo_quality[0] + "&";}

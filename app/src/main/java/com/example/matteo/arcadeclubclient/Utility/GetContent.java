@@ -9,14 +9,9 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.example.matteo.arcadeclubclient.SQLiteDB.DataBaseManager;
-import com.example.matteo.arcadeclubclient.Utility.GetProperties;
-import com.example.matteo.arcadeclubclient.Utility.RestClient;
-import com.example.matteo.arcadeclubclient.Utility.Utility;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.ArrayList;
 
 /**
  * Created by matteo on 31/05/16.
@@ -39,12 +34,12 @@ public class GetContent {
 
         if (result.isNull("upc")){
             if (Utility.isOnline(context)) {
-                output = RestClient.getIstance(context).executeGetRequest(request);
+                output = RestClient.executeGetRequest(request);
                 try {
                     JSONObject boh = new JSONObject(output);
                     JSONObject info = boh.getJSONObject("info");
                     db.addGioco(info);
-                    if (Boolean.valueOf(GetProperties.getIstance(context).getProp("image"))) {
+                    if (Boolean.valueOf(GetProperties.getProp("image"))) {
                         JSONObject image_request = new JSONObject();
                         image_request.put("table", "immagine");
                         image_request.put("query", "id="+String.valueOf(info.get("id_gioco")) + "_"
@@ -65,7 +60,7 @@ public class GetContent {
             }
         } else {
             if (Utility.isOnline(context)) {
-                output = RestClient.getIstance(context).executeGetRequest(request);
+                output = RestClient.executeGetRequest(request);
             } else {
                 try {
                     JSONObject temp = new JSONObject();

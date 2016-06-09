@@ -4,16 +4,12 @@ import android.content.Context;
 import android.provider.Settings;
 import android.util.Log;
 
-import com.example.matteo.arcadeclubclient.R;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.Calendar;
 import java.util.Properties;
 
@@ -33,7 +29,7 @@ public class GetProperties{
 
         private static GetProperties istance = null; //riferimento all' istanza
 
-        private GetProperties(Context context){   //costruttore
+    private GetProperties(Context context){   //costruttore
 
             //path = context.getResources().openRawResource(R.raw.arcadeclub);
             path = "arcadeclub.properties";

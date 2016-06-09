@@ -7,7 +7,6 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.matteo.arcadeclubclient.MagazzinoSearchFragment;
 import com.example.matteo.arcadeclubclient.R;
 
 import org.json.JSONException;
