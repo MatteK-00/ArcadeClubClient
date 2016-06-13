@@ -1,5 +1,7 @@
 package com.example.matteo.arcadeclubclient.Utility;
 
+import android.app.ActivityManager;
+import android.app.IntentService;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -62,11 +64,12 @@ public class RestClient {
             DataBaseManager db = new DataBaseManager(context);
             long prova = db.addReq(Element.toString(),GetProperties.getIstance(context).getProp("idDevice"));
 
-            Log.i("RestClient_Service", "prova = "+ String.valueOf(prova));
+            Log.i("RestClient_Service", "isMyServiceRunning = "+ isMyServiceRunning(QueueService.class, context));
+            if (!isMyServiceRunning(QueueService.class, context)) {
+                Intent intent = new Intent(context, QueueService.class);
+                context.startService(intent);
+            }
 
-            Intent intent = new Intent(context, QueueService.class);
-            context.startService(intent);
-            //context.startService(new Intent(context, QueueService.class));
             Log.i("RestClient_Service", "Dopo il lancio");
 
 
@@ -117,129 +120,117 @@ public class RestClient {
     }
 
 
-    public static class QueueService extends Service {
-        private Looper mServiceLooper;
-        private ServiceHandler mServiceHandler;
-        private static ArrayList coda_locale;
-        private static ArrayList richieste_processate;
 
+
+
+
+
+
+
+    private static boolean isMyServiceRunning(Class<?> serviceClass, Context context) {
+        ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+
+    public static class QueueService extends IntentService {
+        private ArrayList coda_locale;
+        private ArrayList richieste_processate;
+
+        /**
+         * A constructor is required, and must call the super IntentService(String)
+         * constructor with a name for the worker thread.
+         */
         public QueueService() {
-            super();
+            super("HelloIntentService");
         }
 
-
-        // Handler that receives messages from the thread
-        private final class ServiceHandler extends Handler {
-            public ServiceHandler(Looper looper) {
-                super(looper);
-            }
-
-            @Override
-            public void handleMessage(Message msg) {
-
-                Log.i("RestClient_Service", "handleMessage");
-
-
-                if (!Utility.serverReachable()) {
-                    try {
-                        Log.i("RestClient_Service", "Nessuna connessione internet o server non raggiungibile");
-                        Thread.sleep(60000);
-                    } catch (InterruptedException e) {
-                        // Restore interrupt status.
-                        Log.i("RestClient_Service", "Errore nello sleep");
-                        Thread.currentThread().interrupt();
-                    }
-                } else {
-                    while (!coda_locale.isEmpty()) {
-                        try {
-
-                            JSONObject json_request = new JSONObject(coda_locale.remove(0).toString());
-                            JSONObject query = new JSONObject(json_request.get("request").toString());
-                            URL url_request = new URL(url+ json_request.get("id_device").toString() + "/" + query.get("table").toString());
-                            Log.i("RestClient_Service", url_request.toString());
-                            HttpURLConnection conn = (HttpURLConnection) url_request.openConnection();
-                            conn.setDoOutput(true);
-                            conn.setRequestMethod(query.get("method").toString());
-                            conn.setRequestProperty("Accept", "application/json");
-
-                            OutputStreamWriter out = new   OutputStreamWriter(conn.getOutputStream());
-                            out.write(query.get("query").toString());
-                            out.close();
-
-                            if (conn.getResponseCode() != 200) {
-                                coda_locale.add(json_request.toString());
-                                Thread.sleep(5000);
-                                Log.i("RestClient_Service", "Failed : HTTP error code : " + conn.getResponseCode());
-                                //throw new RuntimeException("Failed : HTTP error code : " + conn.getResponseCode());
-                            } else {
-                                richieste_processate.add(json_request.get("id"));
-                                if (query.get("table").equals("magazzino"))
-                                    comprati++;
-                                else
-                                    venduti++;
-                            }
-
-                        } catch (MalformedURLException e) {
-                            e.printStackTrace();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-
-                    // Stop the service using the startId, so that we don't stop
-                    // the service in the middle of handling another job
-                    stopSelf(msg.arg1);
-                }
-            }
-        }
+        /**
+         * The IntentService calls this method from the default worker thread with
+         * the intent that started the service. When this method returns, IntentService
+         * stops the service, as appropriate.
+         */
 
         @Override
-        public void onCreate() {
-            Log.i("RestClient_Service", "onCreate");
-            // Start up the thread running the service.  Note that we create a
-            // separate thread because the service normally runs in the process's
-            // main thread, which we don't want to block.  We also make it
-            // background priority so CPU-intensive work will not disrupt our UI.
+        public int onStartCommand(Intent intent, int flags, int startId) {
+            Toast.makeText(this, "service starting", Toast.LENGTH_SHORT).show();
 
             richieste_processate = new ArrayList();
             coda_locale = new ArrayList();
 
             DataBaseManager db = new DataBaseManager(this);
             coda_locale = db.getRequests();
-            HandlerThread thread = new HandlerThread("ServiceStartArguments");
-            thread.start();
 
-
-            // Get the HandlerThread's Looper and use it for our Handler
-            mServiceLooper = thread.getLooper();
-            mServiceHandler = new ServiceHandler(mServiceLooper);
+            //se il servixio muore viene resuscitato
+            setIntentRedelivery(true);
+            return super.onStartCommand(intent, flags, startId);
         }
 
         @Override
-        public int onStartCommand(Intent intent, int flags, int startId) {
-            Toast.makeText(this, "service starting", Toast.LENGTH_SHORT).show();
-            Log.i("RestClient_Service", "onStartCommand");
+        protected void onHandleIntent(Intent intent) {
+            // Normally we would do some work here, like download a file.
+            // For our sample, we just sleep for 5 seconds.
+            Log.i("RestClient_Service", "handleMessage");
+            if (!Utility.serverReachable()) {
+                try {
+                    Log.i("RestClient_Service", "Nessuna connessione internet o server non raggiungibile");
+                    Thread.sleep(60000);
+                } catch (InterruptedException e) {
+                    // Restore interrupt status.
+                    Log.i("RestClient_Service", "Errore nello sleep");
+                    Thread.currentThread().interrupt();
+                }
+            } else {
+                while (!coda_locale.isEmpty()) {
+                    try {
+                        JSONObject json_request = new JSONObject(coda_locale.remove(0).toString());
+                        JSONObject query = new JSONObject(json_request.get("request").toString());
+                        URL url_request = new URL(url + json_request.get("id_device").toString() + "/" + query.get("table").toString());
+                        Log.i("RestClient_Service", url_request.toString());
+                        HttpURLConnection conn = (HttpURLConnection) url_request.openConnection();
+                        conn.setDoOutput(true);
+                        conn.setRequestMethod(query.get("method").toString());
+                        conn.setRequestProperty("Accept", "application/json");
 
-            // For each start request, send a message to start a job and deliver the
-            // start ID so we know which request we're stopping when we finish the job
-            Message msg = mServiceHandler.obtainMessage();
-            msg.arg1 = startId;
-            mServiceHandler.sendMessage(msg);
+                        OutputStreamWriter out = new OutputStreamWriter(conn.getOutputStream());
+                        out.write(query.get("query").toString());
+                        out.close();
 
-            // If we get killed, after returning from here, restart
-            return START_STICKY;
+                        if (conn.getResponseCode() != 200) {
+                            coda_locale.add(json_request.toString());
+                            Thread.sleep(5000);
+                            Log.i("RestClient_Service", "Failed : HTTP error code : " + conn.getResponseCode());
+                            //throw new RuntimeException("Failed : HTTP error code : " + conn.getResponseCode());
+                        } else {
+                            richieste_processate.add(json_request.get("id"));
+                            if (query.get("table").equals("magazzino"))
+                                comprati++;
+                            else
+                                venduti++;
+                        }
+
+                    } catch (MalformedURLException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                // Stop the service using the startId, so that we don't stop
+                // the service in the middle of handling another job
+                stopSelf();
+            }
         }
-
-        @Override
-        public IBinder onBind(Intent intent) {
-            // We don't provide binding, so return null
-            return null;
-        }
-
         @Override
         public void onDestroy() {
 
@@ -249,13 +240,13 @@ public class RestClient {
                 db.deleteReq(id);
             }
 
-            Log.i("RestClient_Service", "onDestroy");
-
+            Log.i("RestClient_Service","onDestroy");
             Utility.sendNotification(this,comprati,venduti);
             comprati = 0;
             venduti = 0;
             Toast.makeText(this, "service done", Toast.LENGTH_SHORT).show();
         }
+
     }
 
 }

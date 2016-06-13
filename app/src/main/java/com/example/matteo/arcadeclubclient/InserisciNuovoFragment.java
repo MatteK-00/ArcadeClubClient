@@ -48,6 +48,7 @@ public class InserisciNuovoFragment extends ListFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.i("Aggiungi_Fragment", "onCreateView");
+
         view = inflater.inflate(R.layout.fragment_inserisci_nuovo, container, false);
 
         final Spinner spinner_stato = (Spinner) view.findViewById(R.id.spinner);
@@ -189,6 +190,8 @@ public class InserisciNuovoFragment extends ListFragment {
                         RestClient RestClient = com.example.matteo.arcadeclubclient.Utility.RestClient.getIstance(getContext());
                         RestClient.addRequest(request);
 
+
+
                         Thread.sleep(2000);
 
                         progressBar.dismiss();
@@ -206,8 +209,7 @@ public class InserisciNuovoFragment extends ListFragment {
 
             }
         });
-
-
+        
         return view;
     }
 

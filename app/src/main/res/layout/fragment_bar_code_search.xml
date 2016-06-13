@@ -37,7 +37,8 @@
                 android:layout_gravity="center_horizontal|top"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentTop="true"
-                android:layout_weight="0.80" />
+                android:layout_weight="0.80"
+                android:numeric="integer" />
 
             <Button
                 style="?android:attr/buttonStyleSmall"

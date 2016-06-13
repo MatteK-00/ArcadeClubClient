@@ -38,7 +38,8 @@ public class GetContent {
                 try {
                     JSONObject boh = new JSONObject(output);
                     JSONObject info = boh.getJSONObject("info");
-                    db.addGioco(info);
+                    if (Boolean.valueOf(GetProperties.getProp("localDB")))
+                        db.addGioco(info);
                     if (Boolean.valueOf(GetProperties.getProp("image"))) {
                         JSONObject image_request = new JSONObject();
                         image_request.put("table", "immagine");
@@ -48,7 +49,7 @@ public class GetContent {
                         String immg = RestClient.executeGetRequest(image_request);
 
                         Log.i("Get_content",info.toString());
-                        if (db.getImage(String.valueOf(info.get("upc"))).equals(""))
+                        if (Boolean.valueOf(GetProperties.getProp("localDB")) && db.getImage(String.valueOf(info.get("upc"))).equals(""))
                             db.addImage(String.valueOf(info.get("upc")),immg);
                         //Utility.saveImage(info.get("id_gioco").toString() + "_" + info.get("immagine").toString());
                     }
@@ -89,7 +90,8 @@ public class GetContent {
         Log.i("res DB", result);
         if (result.equals("")){
             result = RestClient.executeGetRequest(request);
-            db.addImage(upc,result);
+            if (Boolean.valueOf(GetProperties.getProp("localDB")))
+                db.addImage(upc,result);
         }
         Log.i("res DB", result);
         byte[] decodedString = Base64.decode(result, Base64.DEFAULT);

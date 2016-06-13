@@ -36,7 +36,8 @@
                         android:hint="upc"
                         android:id="@+id/nuovo_upc"
                         android:layout_alignParentTop="true"
-                        android:layout_alignParentStart="true" />
+                        android:layout_alignParentStart="true"
+                        android:numeric="integer" />
 
                     <EditText
                         android:layout_width="200dp"

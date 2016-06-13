@@ -25,7 +25,8 @@
             android:id="@+id/dialog_prezzo"
             android:hint="prezzo"
             android:layout_gravity="center_horizontal"
-            android:gravity="center_horizontal" />
+            android:gravity="center_horizontal"
+            android:numeric="decimal" />
 
         <Button
             android:layout_width="wrap_content"

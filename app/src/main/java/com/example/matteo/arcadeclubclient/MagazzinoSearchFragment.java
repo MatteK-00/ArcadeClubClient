@@ -300,6 +300,7 @@ public class MagazzinoSearchFragment extends ListFragment implements AdapterView
 
                 // Commit the transaction
                 transaction.commit();
+
                 dialog.dismiss();
             }
         });
@@ -335,10 +336,9 @@ public class MagazzinoSearchFragment extends ListFragment implements AdapterView
             String output = null;
 
             try {
-
                 String query = "";
                 if (!params[0].equals(""))
-                    query += "id_item=" + params[0] + "&";
+                    query += "nome=" + params[0] + "&";
                 if (!params[1].equals(""))
                     query += "upc=" + params[1] + "&";
                 if (!params[2].equals(""))
@@ -366,9 +366,6 @@ public class MagazzinoSearchFragment extends ListFragment implements AdapterView
                     String venduti = String.valueOf(responseJSON.get("venduti"));
 
                     Context context = getContext();
-                    //ArrayList<List<String>> ListViewContent = new ArrayList<List<String>>();
-
-
 
                     if (!magazzino.equals("[]")) {
                         magazzino = magazzino.replace("[", "");

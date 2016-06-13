@@ -56,7 +56,7 @@ public class GetProperties{
                 properties.setProperty("idDevice", android_id);
                 properties.setProperty("logged", "false");
                 properties.setProperty("lastLogin", String.valueOf(date));
-                properties.setProperty("image", "false");
+                properties.setProperty("image", "true");
                 properties.setProperty("localDB", "true");
 
                 try {
