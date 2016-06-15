@@ -24,8 +24,6 @@ public class GetContent {
         DataBaseManager db = new DataBaseManager(context);
         JSONObject result = new JSONObject();
 
-        //db.delGiochi(1);
-        //db.delImmagini("");
         try {
             result = db.getGioco("UPC", upc);
         } catch (SQLiteException e){

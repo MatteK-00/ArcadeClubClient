@@ -167,7 +167,7 @@ public class RestClient {
             DataBaseManager db = new DataBaseManager(this);
             coda_locale = db.getRequests();
 
-            //se il servixio muore viene resuscitato
+            //se il servizio muore viene resuscitato
             setIntentRedelivery(true);
             return super.onStartCommand(intent, flags, startId);
         }
@@ -225,9 +225,6 @@ public class RestClient {
                         e.printStackTrace();
                     }
                 }
-
-                // Stop the service using the startId, so that we don't stop
-                // the service in the middle of handling another job
                 stopSelf();
             }
         }

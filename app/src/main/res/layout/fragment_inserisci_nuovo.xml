@@ -68,7 +68,9 @@
                         android:layout_width="200dp"
                         android:layout_height="wrap_content"
                         android:hint="data acquisto"
-                        android:id="@+id/nuovo_data_acquisto" />
+                        android:id="@+id/nuovo_data_acquisto"
+                        android:onClick="showDatePickerDialog"
+                        android:inputType="none" />
 
                 </LinearLayout>
 

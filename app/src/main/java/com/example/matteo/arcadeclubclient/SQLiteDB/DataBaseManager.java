@@ -29,9 +29,6 @@ public class DataBaseManager {
     //nome tabelle
 
     //tabella giochi
-    //public static final String TABLE_GIOCHI = "giochi";
-
-
     public static final String TABLE_GIOCHI = "giochi";
     public static final String TABLE_IMMAGINI = "immagini";
     public static final String TABLE_CODA = "coda";
@@ -46,7 +43,6 @@ public class DataBaseManager {
     public static final String ID = "ID";
     public static final String RICHIESTA = "RICHIESTA";
     public static final String ID_DEVICE = "ID_DEVICE";
-    public static final String BITMAP = "BITMAP";
 
 
     //private static final String[] COLUMNS_GIOCHI = {UPC,NOME,ANNO,CONSOLE,IMMAGINE,BITMAP};
@@ -68,7 +64,7 @@ public class DataBaseManager {
     }
 
 
-    //per tab website
+    //per tab gioco
     private static ContentValues createContentValuesGioco(JSONObject item) {
         ContentValues valuesGioco = new ContentValues();
         try {

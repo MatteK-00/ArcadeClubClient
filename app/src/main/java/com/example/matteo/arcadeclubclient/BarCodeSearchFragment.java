@@ -252,12 +252,7 @@ public class BarCodeSearchFragment extends ListFragment implements AdapterView.O
 
 
                 newFragment.setArguments(bundle);
-
-                // consider using Java coding conventions (upper first char class names!!!)
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
-
-                // Replace whatever is in the fragment_container view with this fragment,
-                // and add the transaction to the back stack
                 transaction.replace(R.id.flContent, newFragment);
                 transaction.addToBackStack(null);
 
@@ -285,7 +280,7 @@ public class BarCodeSearchFragment extends ListFragment implements AdapterView.O
     private void barCodeSearch() {
         try {
             Intent intent = new Intent("com.google.zxing.client.android.SCAN");
-            //intent.putExtra("SCAN_MODE", "UPC-A");
+            intent.putExtra("SCAN_MODE", "UPC-A");
             intent.putExtra("SAVE_HISTORY", true);
             //intent.putExtra("RESULT_DISPLAY_DURATION_MS", 10);
             startActivityForResult(intent, 0);
@@ -300,7 +295,7 @@ public class BarCodeSearchFragment extends ListFragment implements AdapterView.O
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 0) {
+        if (requestCode == 0 && data != null) {
             //if (resultCode == RESULT_OK) {
             FLAG = false;
             String content = data.getStringExtra("SCAN_RESULT"); //this is the result
@@ -417,7 +412,6 @@ public class BarCodeSearchFragment extends ListFragment implements AdapterView.O
 
                         for (String str : item) {
                             try {
-                                //String s = "{'anno': u'1999', 'immagine': None, 'console': u'xboxone', 'upc': u'3286010000057', 'nome': u'nomeprova'}";
                                 Log.i("BCS_Fragment", str);
 
                                 JSONObject item_JSON = new JSONObject(str);

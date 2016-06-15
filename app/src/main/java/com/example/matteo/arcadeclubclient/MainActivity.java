@@ -1,11 +1,10 @@
 package com.example.matteo.arcadeclubclient;
 
-import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.ListFragment;
@@ -14,10 +13,10 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.example.matteo.arcadeclubclient.Utility.GetProperties;
 
@@ -41,13 +40,9 @@ public class MainActivity extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        // Find our drawer view
         mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
         GetProperties prop = GetProperties.getIstance(getApplicationContext());
-        //Log.i("GetProperties", prop.getProp("idDevice"));
-        //prop.setProp("logged", "no");
-        //prop.save();
 
         if (!Boolean.valueOf(prop.getProp("logged"))){
             Log.i("Main_Activity", "Esegui Login");
@@ -82,8 +77,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void selectDrawerItem(MenuItem menuItem) {
-        // Create a new fragment and specify the planet to show based on
-        // position
+        // Create a new fragment and specify the fragment to show based on
+        // title
         ListFragment Listfragment = null;
         Fragment fragment = null;
 
@@ -125,7 +120,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        // Highlight the selected item, update the title, and close the drawer
         menuItem.setChecked(true);
         setTitle(menuItem.getTitle());
         mDrawer.closeDrawers();
@@ -147,7 +141,6 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    // Make sure this is the method with just `Bundle` as the signature
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
@@ -161,6 +154,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    public void showDatePickerDialog(View v) {
+        DialogFragment newFragment = new InserisciNuovoFragment.DatePickerFragment();
+        newFragment.show(getSupportFragmentManager(), "datePicker");
+    }
 
 }
 

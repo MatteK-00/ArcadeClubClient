@@ -1,11 +1,17 @@
 package com.example.matteo.arcadeclubclient;
 
 
+import android.app.DatePickerDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
+import android.app.FragmentManager;
 import android.app.ProgressDialog;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,12 +30,16 @@ import com.example.matteo.arcadeclubclient.Utility.RestClient;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
+
 /**
  * Created by matteo on 20/05/16.
  */
 public class InserisciNuovoFragment extends ListFragment {
 
-    View view;
+    static View view;
     TextView nuovo_nome = null;
     TextView nuovo_upc;
     TextView nuovo_console;
@@ -74,7 +85,10 @@ public class InserisciNuovoFragment extends ListFragment {
             public void onNothingSelected(AdapterView<?> parent) {
 
             }
+
         });
+
+
 
         final Spinner spinner_quality = (Spinner) view.findViewById(R.id.spinner2);
         // Create an ArrayAdapter using the string array and a default spinner layout
@@ -107,6 +121,7 @@ public class InserisciNuovoFragment extends ListFragment {
         nuovo_prezzo_acquisto = (TextView) view.findViewById(R.id.nuovo_prezzo_acquisto);
         nuovo_data_acquisto = (TextView) view.findViewById(R.id.nuovo_data_acquisto);
         nuovo_note = (TextView) view.findViewById(R.id.nuovo_note);
+
 
         Bundle bundle = this.getArguments();
         if(bundle!=null) {
@@ -209,7 +224,7 @@ public class InserisciNuovoFragment extends ListFragment {
 
             }
         });
-        
+
         return view;
     }
 
@@ -218,4 +233,26 @@ public class InserisciNuovoFragment extends ListFragment {
         super.onActivityCreated(savedInstanceState);
 
     }
+
+    public static class DatePickerFragment extends android.support.v4.app.DialogFragment
+            implements DatePickerDialog.OnDateSetListener {
+
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            // Use the current date as the default date in the picker
+            final Calendar c = Calendar.getInstance();
+            int year = c.get(Calendar.YEAR);
+            int month = c.get(Calendar.MONTH);
+            int day = c.get(Calendar.DAY_OF_MONTH);
+
+            // Create a new instance of DatePickerDialog and return it
+            return new DatePickerDialog(getActivity(), this, year, month, day);
+        }
+
+        public void onDateSet(DatePicker view2, int year, int month, int day) {
+            TextView data = (TextView) view.findViewById(R.id.nuovo_data_acquisto);
+            data.setText(year +"-"+ month +"-"+ day);
+        }
+    }
+
 }

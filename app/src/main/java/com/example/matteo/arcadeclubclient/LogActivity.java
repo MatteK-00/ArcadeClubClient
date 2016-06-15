@@ -16,6 +16,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.matteo.arcadeclubclient.Utility.GetProperties;
+import com.example.matteo.arcadeclubclient.Utility.Utility;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -45,7 +46,10 @@ public class LogActivity extends AppCompatActivity {
                 if (userEdit.getText().toString().length() != 0 && pswEdit.getText().toString().length() != 0) {
                     Log.i("LogActivity", "User e Psw non vuoti");
                     String[] param = {"http://188.166.49.29:10101/arcadeclub/", userEdit.getText().toString(),pswEdit.getText().toString(),Boolean.toString(checkSave.isChecked())};
-                    new CallAPI().execute(param);
+                    if (Utility.isOnline(getApplicationContext()))
+                        new CallAPI().execute(param);
+                    else
+                        Toast.makeText(getApplicationContext(), "Server irraggiungibile!", Toast.LENGTH_LONG).show();
 
                 }
 
@@ -123,13 +127,8 @@ public class LogActivity extends AppCompatActivity {
             } catch (Exception e) {
                 Log.i("LogActivity", (e.getMessage()));
             }
-
-
-
             return output;
         }
-
-
 
         protected void onPostExecute(String result) {
             if (!login){

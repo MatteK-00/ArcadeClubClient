@@ -289,16 +289,9 @@ public class MagazzinoSearchFragment extends ListFragment implements AdapterView
 
 
                 newFragment.setArguments(bundle);
-
-                // consider using Java coding conventions (upper first char class names!!!)
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
-
-                // Replace whatever is in the fragment_container view with this fragment,
-                // and add the transaction to the back stack
                 transaction.replace(R.id.flContent, newFragment);
                 transaction.addToBackStack(null);
-
-                // Commit the transaction
                 transaction.commit();
 
                 dialog.dismiss();
@@ -377,7 +370,6 @@ public class MagazzinoSearchFragment extends ListFragment implements AdapterView
 
                         for (String str : magazzino_item) {
                             try {
-                                //String s = "{'anno': u'1999', 'immagine': None, 'console': u'xboxone', 'upc': u'3286010000057', 'nome': u'nomeprova'}";
                                 Log.i("Magazzino_Fragment", str);
                                 JSONObject item_JSON = new JSONObject(str);
                                 magazzinoObj obj = new magazzinoObj(String.valueOf(item_JSON.get("id_item")), String.valueOf(item_JSON.get("note")),
@@ -401,7 +393,6 @@ public class MagazzinoSearchFragment extends ListFragment implements AdapterView
                                 e.printStackTrace(pw);
                                 Log.i("Magazzino_Fragment", sw.toString());
                             }
-                            //adapter.setNotifyOnChange(true);
                         }
                     }
 
@@ -415,7 +406,6 @@ public class MagazzinoSearchFragment extends ListFragment implements AdapterView
 
                         for (String str : venduti_item) {
                             try {
-                                //String s = "{'anno': u'1999', 'immagine': None, 'console': u'xboxone', 'upc': u'3286010000057', 'nome': u'nomeprova'}";
                                 Log.i("Magazzino_Fragment", str);
                                 JSONObject item_JSON = new JSONObject(str);
                                 magazzinoObj obj = new magazzinoObj(String.valueOf(item_JSON.get("id_item")), String.valueOf(item_JSON.get("note")),
@@ -438,7 +428,6 @@ public class MagazzinoSearchFragment extends ListFragment implements AdapterView
                                 e.printStackTrace(pw);
                                 Log.i("Magazzino_Fragment", sw.toString());
                             }
-                            //adapter.setNotifyOnChange(true);
                         }
                     }
                     adapter = new ListViewArrayAdapter(context, ListViewContent);
